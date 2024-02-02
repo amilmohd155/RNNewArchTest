@@ -1,118 +1,47 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import Mapbox, {Camera, LocationPuck, MapView} from '@rnmapbox/maps';
+import {styled} from 'nativewind';
+import React, {Text as RNText, View} from 'react-native';
+import {Auth0Provider, useAuth0} from 'react-native-auth0';
+import {Button, PaperProvider, Text} from 'react-native-paper';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+const App = () => {
+  Mapbox.setAccessToken(
+    'sk.eyJ1IjoiYW1pbG1vaGQxNTUiLCJhIjoiY2xvaXNlN2NlMXB3djJxbWUyandqb2c4NCJ9.JDAJUeMCjyR7GWiReh-rtw',
   );
-}
+  const {authorize} = useAuth0();
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const StyledMapView = styled(MapView);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const handleLogin = async () => {
+    try {
+      await authorize();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+    <PaperProvider>
+      {/* <View className="flex bg-black"> */}
+      {/* <Text className="text-red-200 text-center">
+          Open up App.tsx to start working on your app!
+        </Text>
+        <RNText className="text-yellow-300 text-center">
+          Open up App.tsx to start working on your app!
+        </RNText> */}
+      {/* <StyledMapView className="flex-1" styleURL={Mapbox.StyleURL.Dark}>
+        <Camera followZoomLevel={12} followUserLocation />
+        <LocationPuck />
+      </StyledMapView> */}
+      {/* </View> */}
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+      <Auth0Provider
+        domain={'dev-tcqg0hq4s1uu7xiz.uk.auth0.com'}
+        clientId={'loZitVu88HjdamY8oTleUgFaL4BVAuHi'}>
+        <Button onPress={handleLogin}>Auth</Button>
+      </Auth0Provider>
+    </PaperProvider>
+  );
+};
 
 export default App;
